@@ -4,19 +4,18 @@ import pandas as pd
 from skimage import io, segmentation, measure
 
 
-def load_image(path, crop_row=708):
-    """Read a SEM image and remove the info bar at the bottom."""
-    img = io.imread(path)
-    return img[:crop_row]
+def load_model(gpu=True):
+    """Load the Cellpose model once (slow step)."""
+    from cellpose import models
+    return models.CellposeModel(gpu=gpu)
 
 
 def segment_cellpose(img, flow_threshold=0.4, cellprob_threshold=0.0,
-                     gpu=True):
+                     gpu=True, model=None):
     """Segment grains with Cellpose. Returns a mask array: 0 = background,
-    1..N = grain number."""
-    from cellpose import models  # imported here: the other functions work without cellpose
-
-    model = models.CellposeModel(gpu=gpu)
+    1..N = grain number. Pass a preloaded model to analyse many images."""
+    if model is None:
+        model = load_model(gpu)
     masks = model.eval(img, flow_threshold=flow_threshold,
                        cellprob_threshold=cellprob_threshold)[0]
     return masks
