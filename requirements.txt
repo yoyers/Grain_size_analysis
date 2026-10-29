@@ -1,0 +1,6 @@
+numpy
+scipy
+pandas
+matplotlib
+scikit-image
+cellpose>=4.0
