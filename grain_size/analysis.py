@@ -4,6 +4,12 @@ import pandas as pd
 from skimage import io, segmentation, measure
 
 
+def load_image(path, crop_row=708):
+    """Read a SEM image and remove the info bar at the bottom."""
+    img = io.imread(path)
+    return img[:crop_row]
+
+
 def load_model(gpu=True):
     """Load the Cellpose model once (slow step)."""
     from cellpose import models
